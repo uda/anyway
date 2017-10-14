@@ -3,11 +3,30 @@ version: '2'
 services:
   anyway:
     build: .
-    image: hasadna/anyway:latest
+#    image: hasadna/anyway:latest
     ports:
       - "8080:5000"
     environment:
       - DATABASE_URL=sqlite:////anyway/local.db
+      - FACEBOOK_KEY=""
+      - FACEBOOK_SECRET=""
+      - GOOGLE_LOGIN_CLIENT_ID=""
+      - GOOGLE_LOGIN_CLIENT_PASS=""
+      - MAILUSER=""
+      - MAILPASS=""
+      - HOST=""
+      - PORT=""
     volumes:
       - ./static:/anyway/static
     restart: always
+  cron:
+    build: .
+    command: "python /anyway/united.py"
+    environment:
+      - MAILUSER=""
+      - MAILPASS=""
+    volumes_from:
+      - anyway
+    depends_on:
+      - anyway
+    restart: on-failure
